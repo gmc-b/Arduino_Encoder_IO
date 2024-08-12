@@ -12,7 +12,7 @@ const short INPUT_PIN_ENCODER_Z = 2; // Sinal de entrada do canal Z do encoder /
 const short INPUT_PIN_ENCODER_A = 3; // Sinal de entrada do canal A do encoder // Apenas os pinos 2 e 3 do arduino UNO permitem interrupções, não alterar
 const short INPUT_PIN_ENCODER_B = 4; // Sinal de entrada do canal B do encoder
 
-const int ENCODER_RESOLUTION = 100;
+const int ENCODER_RESOLUTION = 600;
 const float STEP             = (float) 360/ENCODER_RESOLUTION;
 
 //////////////// Variáveis ////////////////
@@ -44,11 +44,11 @@ void setup() {
   Serial.begin(9600); 
 
   pinMode(INPUT_PIN_ENCODER_Z, INPUT);
-  pinMode(INPUT_PIN_ENCODER_A, INPUT);
-  pinMode(INPUT_PIN_ENCODER_B, INPUT);
+  pinMode(INPUT_PIN_ENCODER_A, INPUT_PULLUP);
+  pinMode(INPUT_PIN_ENCODER_B, INPUT_PULLUP);
   
   attachInterrupt(digitalPinToInterrupt(INPUT_PIN_ENCODER_Z), tare, FALLING);
-  attachInterrupt(digitalPinToInterrupt(INPUT_PIN_ENCODER_A), set_state, FALLING);
+  attachInterrupt(digitalPinToInterrupt(INPUT_PIN_ENCODER_A), set_state, RISING);
 
 }
 
