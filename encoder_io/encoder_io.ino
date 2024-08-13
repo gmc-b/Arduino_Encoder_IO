@@ -27,10 +27,10 @@ void set_state(){                             // É importante manter a leitura 
   state_A = digitalRead(INPUT_PIN_ENCODER_A);
   state_B = digitalRead(INPUT_PIN_ENCODER_B);
   if (state_A == state_B){
-    counter--; // Sentido anti-horário adotado como negativo
+    counter = (counter - 1 + ENCODER_RESOLUTION )%ENCODER_RESOLUTION; // Sentido anti-horário adotado como negativo
   }
   else{
-    counter++; // Sentido horário adotado como positivo
+    counter = (counter + 1 + ENCODER_RESOLUTION )%ENCODER_RESOLUTION; // Sentido horário adotado como positivo
   }
 }
 
@@ -44,11 +44,11 @@ void setup() {
   Serial.begin(9600); 
 
   pinMode(INPUT_PIN_ENCODER_Z, INPUT);
-  pinMode(INPUT_PIN_ENCODER_A, INPUT_PULLUP);
-  pinMode(INPUT_PIN_ENCODER_B, INPUT_PULLUP);
+  pinMode(INPUT_PIN_ENCODER_A, INPUT);
+  pinMode(INPUT_PIN_ENCODER_B, INPUT);
   
   attachInterrupt(digitalPinToInterrupt(INPUT_PIN_ENCODER_Z), tare, FALLING);
-  attachInterrupt(digitalPinToInterrupt(INPUT_PIN_ENCODER_A), set_state, RISING);
+  attachInterrupt(digitalPinToInterrupt(INPUT_PIN_ENCODER_A), set_state, FALLING);
 
 }
 
