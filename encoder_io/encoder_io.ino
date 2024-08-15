@@ -32,10 +32,10 @@ void set_state(){                             // É importante manter a leitura 
   state_A = digitalRead(INPUT_PIN_ENCODER_A);
   state_B = digitalRead(INPUT_PIN_ENCODER_B);
   if (state_A == state_B){
-    counter = (counter - 1 + ENCODER_RESOLUTION )%ENCODER_RESOLUTION; // Sentido anti-horário adotado como negativo
+    counter = (counter + 1 + ENCODER_RESOLUTION )%ENCODER_RESOLUTION; // Sentido anti-horário adotado como negativo
   }
   else{
-    counter = (counter + 1 + ENCODER_RESOLUTION )%ENCODER_RESOLUTION; // Sentido horário adotado como positivo
+    counter = (counter - 1 + ENCODER_RESOLUTION )%ENCODER_RESOLUTION; // Sentido horário adotado como positivo
   }
   }
 
