@@ -21,11 +21,14 @@ const int ENCODER_RESOLUTION = 600;
 const float STEP             = (float) 360/ENCODER_RESOLUTION;
 const float pi               = 3.1416;
 const float pi_2             = 6.2832;
+const char  tare_byte        = B00100101; // Byte de verificação para processo de tara definido arbitrariamente (decimal: 37/ ascii: "%")
 
 //////////////////////////////// Variáveis ////////////////////////////////
 volatile short state_A = 0;
 volatile short state_B = 0;
 volatile int   counter = 0;
+
+char serial_buffer     = 0;
 
 //////////////////////////////// Funções adicionais ////////////////////////////////
 void set_state(){                             // É importante manter a leitura do sensor ótico e atualização das variáveis em uma ISR e não no loop. Dessa forma é garantida a captura e processamento das mudanças de estado
@@ -83,7 +86,13 @@ void setup() {
 }
 
 void loop() {
-  
+  if (Serial.available() > 0) {
+    serial_buffer = Serial.read();
+    
+    if (serial_buffer == tare_byte){
+      tare();
+    }
+  }
 }
 
 
