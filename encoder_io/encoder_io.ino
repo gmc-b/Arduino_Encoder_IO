@@ -40,9 +40,10 @@ char serial_buffer     = 0;
 
 //////////////// Funções adicionais ////////////////
 void set_state(){                                         // É importante manter a leitura do sensor ótico e atualização das variáveis em uma ISR e não no loop. Dessa forma é garantida a captura e processamento das mudanças de estado
-  state_A = (PORTD & BIT_MASK[INPUT_PIN_ENCODER_A]) > 0 ; // & lógico com bit_mask para cada pino, garantindo leitura mais rápida  
-  state_B = (PORTD & BIT_MASK[INPUT_PIN_ENCODER_B]) > 0 ; // & lógico com bit_mask para cada pino, garantindo leitura mais rápida 
-
+  state_A = (PIND & BIT_MASK[INPUT_PIN_ENCODER_A]) > 0 ; // & lógico com bit_mask para cada pino, garantindo leitura mais rápida  
+  state_B = (PIND & BIT_MASK[INPUT_PIN_ENCODER_B]) > 0 ; // & lógico com bit_mask para cada pino, garantindo leitura mais rápida 
+  
+  
   if (state_A == state_B){
     counter = (counter + 1 + ENCODER_RESOLUTION )%ENCODER_RESOLUTION; // Sentido anti-horário adotado como negativo
   }
