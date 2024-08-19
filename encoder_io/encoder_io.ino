@@ -5,29 +5,28 @@
 //
 // Placa: Arduino UNO
 // Interrupções:
-//    Para uma frequência de 100 Hz (T = 10 ms)
+//    Para uma frequência de 25 Hz (T = 40 ms)
 //    Clock sistema: 16 MHz
 //    Prescalar escolhido: 64
 //    Frequência timer 1: 16Mhz/64 = 250 KHz
 //    Pulse time = 1/250 Khz =  4 us 
-//    Contar até: 10 ms / 4 us = 2500
+//    Contar até: 40 ms / 4 us = 10.000 (f = 25 Hz)
 
 
 
 
 
 //////////////// Constantes ////////////////
-//const short INPUT_PIN_ENCODER_Z = 2; // Sinal de entrada de referência de volta (sensor hall) // Apenas os pinos 2 e 3 do arduino UNO permitem interrupções, não alterar 
-const short INPUT_PIN_ENCODER_A = 3;   // Sinal de entrada do canal A do encoder                  // Apenas os pinos 2 e 3 do arduino UNO permitem interrupções, não alterar
-const short INPUT_PIN_ENCODER_B = 4;   // Sinal de entrada do canal B do encoder
+//const short INPUT_PIN_ENCODER_Z = 4; // Sinal de entrada de referência de volta (sensor hall)  
+const short INPUT_PIN_ENCODER_A = 3;   // Sinal de entrada do canal A do encoder    // Apenas os pinos 2 e 3 do arduino UNO permitem interrupções, não alterar      
+const short INPUT_PIN_ENCODER_B = 2;   // Sinal de entrada do canal B do encoder    // Apenas os pinos 2 e 3 do arduino UNO permitem interrupções, não alterar
 
 const int ENCODER_RESOLUTION = 600;
-const float STEP             = (float) 360/ENCODER_RESOLUTION;
-const float PI_2             = 6.2832;     // PI = 3.1416
 const char  TARE_BYTE        = 0b00100101; // Byte de verificação para processo de tara definido arbitrariamente (decimal: 37/ ascii: "%")
 
 const char BIT_MASK[8] = {0b00000001,0b00000010,0b00000100,0b00001000,0b00010000,0b00100000,0b01000000,0b10000000};
 //////////////// Variáveis ////////////////
+volatile char  state   = 0;
 volatile char  state_A = 0;
 volatile char  state_B = 0;
 volatile int   counter = 0;
@@ -43,7 +42,7 @@ void set_state(){                                         // É importante mante
   state_A = (PIND & BIT_MASK[INPUT_PIN_ENCODER_A]) > 0 ; // & lógico com bit_mask para cada pino, garantindo leitura mais rápida  
   state_B = (PIND & BIT_MASK[INPUT_PIN_ENCODER_B]) > 0 ; // & lógico com bit_mask para cada pino, garantindo leitura mais rápida 
   
-  
+    
   if (state_A == state_B){
     counter = (counter + 1 + ENCODER_RESOLUTION )%ENCODER_RESOLUTION; // Sentido anti-horário adotado como negativo
   }
@@ -55,7 +54,7 @@ void set_state(){                                         // É importante mante
 
 ISR(TIMER1_COMPA_vect){
   TCNT1  = 0;                  // Reseta o contador para a próxima interrupção
-  Serial.println((counter * (PI_2/ENCODER_RESOLUTION)) ,3 );
+  Serial.println(counter );
 }
 
 
@@ -77,7 +76,7 @@ void setup() {
 
   TCCR1B |= 0b00000011;        // Atribuição de valor 011 (prescalar: 64) para os bits responsáveis pela definição de prescalar
   TIMSK1 |= 0b00000010;        // Atribuição de valor 10 para habilitar o modo comparador
-  OCR1A   = 2500;               // Define o valor de comparação para ativação da interrupção
+  OCR1A   = 10000;              // Define o valor de comparação para ativação da interrupção
 
   sei();                      // Ativa novamente as interrupções
 
@@ -90,7 +89,7 @@ void setup() {
   pinMode(INPUT_PIN_ENCODER_B, INPUT);
   
   //attachInterrupt(digitalPinToInterrupt(INPUT_PIN_ENCODER_Z), tare, FALLING);
-  attachInterrupt(digitalPinToInterrupt(INPUT_PIN_ENCODER_A), set_state, FALLING);
+  attachInterrupt(digitalPinToInterrupt(INPUT_PIN_ENCODER_A), set_state, CHANGE);
 
 }
 
