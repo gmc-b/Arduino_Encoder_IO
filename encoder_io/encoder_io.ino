@@ -21,9 +21,9 @@
 
 
 //////////////// Constantes ////////////////
-const short INPUT_PIN_ENCODER_Z = 2; // Sinal de entrada de referência de volta   // Apenas os pinos 2 e 3 do arduino UNO permitem interrupções, não alterar  
-const short INPUT_PIN_ENCODER_A = 3;   // Sinal de entrada do canal A do encoder    // Apenas os pinos 2 e 3 do arduino UNO permitem interrupções, não alterar      
-const short INPUT_PIN_ENCODER_B = 4;   // Sinal de entrada do canal B do encoder   
+const short INPUT_PIN_ENCODER_Z = 2;   // Sinal de entrada de referência de volta   // Apenas os pinos 2 e 3 do arduino UNO permitem interrupções, não alterar  
+const short INPUT_PIN_ENCODER_A = 3;   // Sinal de entrada do canal A do encoder         
+const short INPUT_PIN_ENCODER_B = 4;   // Sinal de entrada do canal B do encoder    // Apenas os pinos 2 e 3 do arduino UNO permitem interrupções, não alterar 
 
 const int  ENCODER_RESOLUTION = 360;
 const int  TIMER_COUNTER      = 5000;
@@ -32,9 +32,8 @@ const int  TIMER_COUNTER      = 5000;
 
 //////////////// Variáveis ////////////////
 volatile char  direction = 0;
-volatile char  pin_state = 0;
 volatile int   counter   = 0;
-
+volatile char  serial_print_flag = false;
 
 //////////////// Interrupções ////////////////
 void encoder_counter(){   
@@ -59,7 +58,7 @@ void tare(){
 
 ISR(TIMER1_COMPA_vect){
   TCNT1  = 0;                  // Reseta o contador para a próxima interrupção
-  Serial.println(counter);
+  serial_print_flag = true;
 }
 
 
@@ -90,13 +89,19 @@ void setup() {
   pinMode(INPUT_PIN_ENCODER_B, INPUT);
   
   attachInterrupt(digitalPinToInterrupt(INPUT_PIN_ENCODER_Z), tare, FALLING);
-  attachInterrupt(digitalPinToInterrupt(INPUT_PIN_ENCODER_A), encoder_counter, FALLING);
+  attachInterrupt(digitalPinToInterrupt(INPUT_PIN_ENCODER_A), encoder_counter, FALLING); 
 
 
   sei();                      // Ativa novamente as interrupções
 
 }
 
-void loop() {}
+void loop() {
+  
+  if (serial_print_flag){
+    Serial.println(counter);
+    serial_print_flag = false;
+  }
+}
 
 
