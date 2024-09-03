@@ -41,13 +41,13 @@ void encoder_counter(){
   direction = ( ( PIND + 0b00001000) & 0b00010000); // direction > 0 para Sentido positivo, direction = 0 para sentido negativo 
 
   if (direction){
-    counter --; // Sentido anti-horário adotado como negativo
-    if (counter < 0)                    counter += ENCODER_RESOLUTION;
+    counter ++; // Sentido horário adotado como positivo
+    if (counter >= ENCODER_RESOLUTION)  counter -= ENCODER_RESOLUTION;
+
   }
   else{
-    counter ++; // Sentido horário adotado como positivo
-    if (counter > ENCODER_RESOLUTION)  counter -= ENCODER_RESOLUTION;
-    
+    counter --; // Sentido anti-horário adotado como negativo
+    if (counter < 0)                    counter += ENCODER_RESOLUTION;
   }
 }
 
