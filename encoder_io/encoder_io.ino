@@ -22,11 +22,11 @@
 
 //////////////// Constantes ////////////////
 const short INPUT_PIN_ENCODER_Z = 2;   // Sinal de entrada de referência de volta   // Apenas os pinos 2 e 3 do arduino UNO permitem interrupções, não alterar  
-const short INPUT_PIN_ENCODER_A = 3;   // Sinal de entrada do canal A do encoder         
-const short INPUT_PIN_ENCODER_B = 4;   // Sinal de entrada do canal B do encoder    // Apenas os pinos 2 e 3 do arduino UNO permitem interrupções, não alterar 
+const short INPUT_PIN_ENCODER_A = 3;   // Sinal de entrada do canal A do encoder    // Apenas os pinos 2 e 3 do arduino UNO permitem interrupções, não alterar      
+const short INPUT_PIN_ENCODER_B = 4;   // Sinal de entrada do canal B do encoder    
 
 const int  ENCODER_RESOLUTION = 360;
-const int  TIMER_COUNTER      = 5000;
+const int  TIMER_COUNTER      = 3125;
 
 
 
@@ -52,7 +52,7 @@ void encoder_counter(){
 }
 
 void tare(){
-  counter = 0;
+  counter = 300; // Ajustado a partir da posição angular relativa do ângulo zero do encoder com o ângulo zero determinado para a pedalada
 }
 
 
